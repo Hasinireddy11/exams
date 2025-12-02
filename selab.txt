@@ -1,0 +1,203 @@
+**MINIKUBE**
+
+minikube start --driver=docker
+
+minikube kubectl -- get pods -A
+
+kubectl version --client
+
+minikube start
+
+kubectl create deployment mynginx --image=nginx
+
+kubectl get deployments
+
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+
+kubectl scale deployment mynginx --replicas=4
+
+kubectl get service mynginx
+
+kubectl port-forward svc/mynginx 8081:80
+
+Open localhost after that delete
+
+kubectl delete deployment mynginx
+kubectl delete service mynginx
+
+minikube stop
+
+minikube delete
+
+**NAGIOS**
+
+docker pull jasonrivers/nagios:latest
+
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+
+**AWS**
+commands:
+
+sudo su
+sudo apt-get update
+sudo apt-get install docker.io
+sudo docker --version
+sudo docker images
+sudo docker ps
+git clone //your repo
+cd repo Name
+nano Dockerfile
+after that send ctrl + o && ctrl + x
+minisudo docker build -t fileName .
+sudo docker run -d -p 9090:8080 filename //port give the value of the port you gave
+
+
+//SAFE SIDE (Docker compose file):
+
+FROM tomcat:9.0
+
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+
+CMD ["catalina.sh", "run"]
+
+
+
+**PIPELINE CODE**
+
+pipeline {
+    agent any
+    tools{
+        maven 'MAVEN_HOME'
+    }
+    stages {
+        stage('git repo & clean') {
+            steps {
+                //bat "rmdir  /s /q mavenjava"
+                bat "git clone https://github.com/srivijju/jenkins_web.git"
+                bat "mvn clean -f jenkins_web"
+            }
+        }
+        stage('install') {
+            steps {
+                bat "mvn install -f jenkins_web"
+            }
+        }
+        stage('test') {
+            steps {
+                bat "mvn test -f jenkins_web"
+            }
+        }
+        stage('package') {
+            steps {
+                bat "mvn package -f jenkins_web"
+            }
+        }
+    }
+}
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven'   // Jenkins Maven tool name from Global Tool Configuration
+    }
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                bat 'rmdir /s /q maven-web 2>nul || exit 0'
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                bat 'git clone https://github.com/Hasinireddy11/maven-web.git'
+            }
+        }
+
+        stage('Maven Clean') {
+            steps {
+                bat 'mvn clean -f maven-web/pom.xml'
+            }
+        }
+
+        stage('Maven Install') {
+            steps {
+                bat 'mvn install -f maven-web/pom.xml'
+            }
+        }
+
+        stage('Maven Test') {
+            steps {
+                bat 'mvn test -f maven-web/pom.xml'
+            }
+        }
+
+        stage('Maven Package') {
+            steps {
+                bat 'mvn package -f maven-web/pom.xml'
+            }
+        }
+    }
+}
+
+3 pipeline tomcat code
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+
+  <!-- REQUIRED roles for Jenkins deployment -->
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <role rolename="manager-status"/>
+  <role rolename="manager-jmx"/>
+
+  <!-- Optional default roles -->
+  <role rolename="tomcat"/>
+  <role rolename="role1"/>
+
+  <!-- Your admin Jenkins user -->
+  <user username="admin" password="1234"
+        roles="manager-gui,manager-script,manager-status,manager-jmx"/>
+
+</tomcat-users>
+
+docker-compose.yml sql
+
+version: '3.8'
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    restart: always
+    ports:
+      - "8088:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_pass
+      WORDPRESS_DB_NAME: wordpress_db
+    depends_on:
+      - db
+    volumes:
+      - wordpress_data:/var/www/html
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress_db
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: wp_pass
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  wordpress_data:
+  db_data:
