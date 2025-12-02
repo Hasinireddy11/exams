@@ -276,6 +276,7 @@ Ngrok
 
 ngrok config add-authtoken <yourtoken>
 ngrok http 8080
+paste in payload in github with /github-webhook/
 
 Git
 git init                 → Creates a new local Git repository
@@ -314,5 +315,4 @@ git diff                     → Shows differences between files
 git show <commit>            → Shows details of a specific commit
 
 git tag v1.0                 → Creates a version tag
-git push origin --tags       → Pushes tags to GitHub
-
+git push origin --tags       → Pushes tags 
