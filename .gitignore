@@ -316,3 +316,8 @@ git show <commit>            → Shows details of a specific commit
 
 git tag v1.0                 → Creates a version tag
 git push origin --tags       → Pushes tags 
+ docker compose command 
+docker-compose up -d 
+
+admin 1234
+nagiosadmin nagios
